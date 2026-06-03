@@ -1,19 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>spotify</title>
-    <link rel="stylesheet" href="style.css">
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Clone</title>
+  <link rel="stylesheet" href="style.css" />
+  
 </head>
 <body>
-    <nav>
-        <ul>
-            <li class="brand"><img src="logo.png" alt="Spotify"> Spotify</li>
-            <li>Home</li>
-            <li>About</li>
-        </ul>
-    </nav>
+ 
+<!-- ═══ APP LAYOUT ═══ -->
+<div class="app-wrapper">
+ 
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <!-- Logo -->
+      <a class="logo" href="#">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#1DB954"/>
+          <path d="M7 15.5c3.5-1.2 7.5-.8 10.5 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5c4.5-1.5 9.5-.8 13 1.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M5.5 7.5c5-1.8 11-1 15 2" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span>Spotify</span>
+      </a>
+      <!-- Nav -->
+      <nav>
+        <div class="nav-link active" onclick="setNav(this)">
+          <i class="ti ti-home"></i> Home
+        </div>
+        <div class="nav-link" onclick="setNav(this)">
+          <i class="ti ti-search"></i> Search
+        </div>
+        <div class="nav-link" onclick="setNav(this)">
+          <i class="ti ti-books"></i> Your Library
+        </div>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <nav>
+        <div class="nav-link" onclick="setNav(this)">
+          <i class="ti ti-circle-plus"></i> Create Playlist
+        </div>
+        <div class="nav-link" onclick="setNav(this)" style="color:#8c67ab;">
+          <i class="ti ti-heart" style="color:#8c67ab;"></i> Liked Songs
+        </div>
+      </nav>
+    </div>
+ 
+    <div class="sidebar-divider"></div>
+ 
+    <!-- Library -->
+    <div class="library-header">
+      <span>Playlists</span>
+      <button title="Add playlist"><i class="ti ti-plus"></i></button>
+    </div>
+    <div class="playlist-list" id="sidebar-playlists"></div>
+  </aside>
+ 
+  <!-- MAIN -->
+  <main class="main" id="main-area">
+    <div class="topbar">
+      <div class="nav-arrows">
+        <button class="nav-btn" title="Back">&#8592;</button>
+        <button class="nav-btn" title="Forward">&#8594;</button>
+      </div>
+      <div class="topbar-right">
+        <button class="user-pill">
+          <div class="user-avatar">YO</div>
+          Your Name
+        </button>
+      </div>
+    </div>
+ 
+    <div class="content-body">
+      <h1 class="greeting" id="greeting">Good afternoon</h1>
+ 
+      <!-- Quick access -->
+      <div class="quick-grid" id="quick-grid"></div>
+ 
+      <!-- Sections -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Recently Played</h2>
+          <span class="see-all">See all</span>
+        </div>
+        <div class="cards-row" id="row-recent"></div>
+      </div>
+ 
+      <div class="section">
+        <div class="section-header">
+          <h2>Made for You</h2>
+          <span class="see-all">See all</span>
+        </div>
+        <div class="cards-row" id="row-mfy"></div>
+      </div>
+ 
+      <div class="section">
+        <div class="section-header">
+          <h2>Popular Artists</h2>
+          <span class="see-all">See all</span>
+        </div>
+        <div class="cards-row" id="row-artists"></div>
+      </div>
+ 
+      <div class="section">
+        <div class="section-header">
+          <h2>Trending</h2>
+          <span class="see-all">See all</span>
+        </div>
+        <div class="cards-row" id="row-trending"></div>
+      </div>
+    </div>
+  </main>
+</div>
+ 
+<!-- ═══ PLAYER BAR ═══ -->
+<div class="player">
+  <!-- Now playing -->
+  <div class="now-playing">
+    <div class="np-art" id="np-art">🎵</div>
+    <div class="np-info">
+      <div class="np-title" id="np-title">Select a track</div>
+      <div class="np-artist" id="np-artist">—</div>
+    </div>
+    <button class="icon-btn" id="like-btn" title="Save to Liked Songs" onclick="toggleLike()">
+      <i class="ti ti-heart" id="like-icon"></i>
+    </button>
+  </div>
+ 
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-btns">
+      <button class="icon-btn" id="shuffle-btn" title="Shuffle" onclick="toggleShuffle()">
+        <i class="ti ti-arrows-shuffle"></i>
+      </button>
+      <button class="icon-btn" title="Previous" onclick="prevTrack()">
+        <i class="ti ti-player-skip-back" style="font-size:22px;"></i>
+      </button>
+      <button class="play-btn" id="play-btn" title="Play / Pause" onclick="togglePlay()">
+        <i class="ti ti-player-play-filled" id="play-icon"></i>
+      </button>
+      <button class="icon-btn" title="Next" onclick="nextTrack()">
+        <i class="ti ti-player-skip-forward" style="font-size:22px;"></i>
+      </button>
+      <button class="icon-btn" id="repeat-btn" title="Repeat" onclick="toggleRepeat()">
+        <i class="ti ti-repeat"></i>
+      </button>
+    </div>
+    <div class="progress-row">
+      <span class="time" id="cur-time">0:00</span>
+      <div class="prog-track" id="prog-track" onclick="seekTo(event)">
+        <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+        <div class="prog-dot" id="prog-dot"></div>
+      </div>
+      <span class="time end" id="dur-time">0:00</span>
+    </div>
+  </div>
+ 
+  <!-- Volume -->
+  <div class="vol-section">
+    <button class="icon-btn" id="vol-btn" title="Mute" onclick="toggleMute()">
+      <i class="ti ti-volume" id="vol-icon"></i>
+    </button>
+    <div class="vol-track" id="vol-track" onclick="setVol(event)">
+      <div class="vol-fill" id="vol-fill"></div>
+    </div>
+  </div>
+  
+</div>
+ 
+<!-- ═══ JAVASCRIPT ═══ -->
+
+<script src="script.js"></script>
 </body>
 </html>
+ 
